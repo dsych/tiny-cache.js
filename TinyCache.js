@@ -33,7 +33,8 @@ module.exports = class LRUCache {
             if (this.cache.size >= this.maxSize) {
                 // we are at capacity, thus evict the least used node
                 this.cache.delete(this.tail.prev.value);
-                this.tail.prev.next = this.tail;
+                this.tail.prev.prev.next = this.tail;
+                this.tail.prev = this.tail.prev.prev;
             }
             // construct the new node
             node = new Node(key, value);
