@@ -28,6 +28,9 @@ module.exports = class LRUCache {
             }
             // construct the new node
             node = new Node(key, value);
+        } else {
+            // update the value of existing node
+            node.value = value;
         }
 
         // place node at the top of the linked list
