@@ -1,6 +1,7 @@
 class Node {
-    constructor(v) {
+    constructor(k, v) {
         this.value = v;
+        this.key = k;
         this.next = null;
         this.prev = null;
     }
@@ -11,14 +12,14 @@ module.exports = class LRUCache {
         this.maxSize = maxSize;
         this.cache = new Map();
 
-        this.head = new Node(-1);
-        this.tail = new Node(-1);
+        this.head = new Node(-1, -1);
+        this.tail = new Node(-1, -1);
         this.head.next = this.tail;
         this.tail.prev = this.head;
     }
 
-    put(value) {
-        let node = this.cache.get(value);
+    put(key, value) {
+        let node = this.cache.get(key);
         if (!node) {
             if (this.cache.size >= this.maxSize) {
                 // we are at capacity, thus evict the least used node
@@ -26,7 +27,7 @@ module.exports = class LRUCache {
                 this.tail.prev.next = this.tail;
             }
             // construct the new node
-            node = new Node(value);
+            node = new Node(key, value);
         }
 
         // place node at the top of the linked list
@@ -39,11 +40,11 @@ module.exports = class LRUCache {
         node.prev = this.head;
 
         // add node to the cache
-        this.cache.set(value, node);
+        this.cache.set(key, node);
     }
 
-    get(value) {
-        const node = this.cache.get(value);
+    get(key) {
+        const node = this.cache.get(key);
         if (node) {
             // link prev and next of the target node together
             const oldPrev = node.prev;
@@ -60,6 +61,8 @@ module.exports = class LRUCache {
             // reset references of the head
             this.head.next = node;
             node.prev = this.head;
+
+            return node.value;
         } else {
             return null;
         }
