@@ -9,7 +9,11 @@ class Node {
 
 module.exports = class LRUCache {
     constructor(maxSize) {
-        this.maxSize = maxSize;
+        this.maxSize = +maxSize;
+        // if unable to parse the maxSize, default to 0
+        if (isNaN(this.maxSize)) {
+            this.maxSize = 0;
+        }
         this.cache = new Map();
 
         this.head = new Node(-1, -1);
@@ -19,6 +23,11 @@ module.exports = class LRUCache {
     }
 
     put(key, value) {
+        // no need to do anything when max capacity is 0
+        if (this.maxSize <= 0) {
+            return;
+        }
+
         let node = this.cache.get(key);
         if (!node) {
             if (this.cache.size >= this.maxSize) {
@@ -31,6 +40,9 @@ module.exports = class LRUCache {
         } else {
             // update the value of existing node
             node.value = value;
+            // extract the current node for the list
+            node.next.prev = node.prev;
+            node.prev.next = node.next;
         }
 
         // place node at the top of the linked list
