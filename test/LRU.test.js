@@ -72,9 +72,10 @@ describe("LRU tests", () => {
         cache.put(values[0], values[0]);
 
         cache.put(values[2], values[2]);
+        const entries = cache.getEntries();
 
-        assert.equal(cache.cache.has(values[0]), true);
-        assert.equal(cache.cache.has(values[2]), true);
+        assert.equal(entries.filter(el => el.key === values[0]).length, 1);
+        assert.equal(entries.filter(el => el.key === values[2]).length, 1);
     });
 
     it("should prioritize nodes correctly based on update", () => {
@@ -88,12 +89,11 @@ describe("LRU tests", () => {
 
         populateCache(cache, reversedValues);
 
-        let p = cache.head.next;
-        let index = 0;
-        while (p != cache.tail) {
-            assert.equal(p.key, values[index++]);
-            p = p.next;
-        }
+        const entries = cache.getEntries();
+        assert.deepEqual(
+            entries.map(en => en.key),
+            values
+        );
     });
 
     it("should not store any values for 0 max size", () => {

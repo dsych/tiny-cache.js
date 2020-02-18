@@ -91,4 +91,14 @@ module.exports = class LRUCache {
     getMaxCapacity() {
         return this.maxSize;
     }
+
+    getEntries() {
+        const rc = [];
+        let p = this.head.next;
+        while (p != this.tail) {
+            rc.push({ key: p.key, value: p.value });
+            p = p.next;
+        }
+        return rc;
+    }
 };
