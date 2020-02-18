@@ -8,16 +8,34 @@ class Node {
 
 module.exports = class LFUCache {
     constructor(maxSize) {
-        this.maxSize = maxSize;
+        this.maxSize = +maxSize;
+        if (isNaN(this.maxSize)) {
+            this.maxSize = 0;
+        }
         this.cache = new Map();
         this.counts = [new Set()];
     }
 
     put(key, value) {
+        if (this.maxSize <= 0) {
+            return;
+        }
+
         let node = this.cache.get(key);
 
         if (!node) {
+            // reached max capacity
+            if (this.cache.size >= this.maxSize) {
+                // remove first available node
+                const set = this.counts.find(s => s.size > 0);
+                const it = set.values().next();
+                this.cache.delete(it.value);
+                set.delete(it.value);
+            }
+
             node = new Node(key, value);
+        } else {
+            node.value = value;
         }
         this.counts[node.frequency].delete(node.key);
         // move current node to the higher frequency
@@ -34,6 +52,7 @@ module.exports = class LFUCache {
 
     get(key) {
         let node = this.cache.get(key);
+        let rc = null;
         if (node) {
             // value is found, we need to increase the frequency of that key
 
@@ -48,12 +67,10 @@ module.exports = class LFUCache {
 
             this.counts[node.frequency].add(node.key);
 
-            node = { key: node.key, value: node.value };
-        } else {
-            node = null;
+            rc = node.value;
         }
 
-        return node;
+        return rc;
     }
 
     getSize() {
