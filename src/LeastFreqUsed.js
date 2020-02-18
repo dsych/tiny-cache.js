@@ -8,4 +8,13 @@ module.exports = class LFUCache {
     get(key) {}
 
     getSize() {}
+
+    getMaxCapacity() {
+        return this.maxSize;
+    }
+
+    getEntries() {
+        const rc = [];
+        return rc;
+    }
 };
