@@ -9,20 +9,26 @@ describe("LRU tests", () => {
         vls.forEach(v => c.put(v, v));
     };
 
+    const getReversedValues = v => v.slice().reverse();
+
     it("should store all values", () => {
         cache = new LRUCache(values.length);
         populateCache(cache, values);
 
-        values.forEach(v => {
-            assert.equal(cache.cache.has(v), true);
-        });
+        assert.deepEqual(
+            cache.getEntries().map(el => el.key),
+            getReversedValues(values)
+        );
     });
 
     it("should evict first values from cache", () => {
         cache = new LRUCache(values.length - 2);
         populateCache(cache, values);
 
-        values.slice(2).forEach(v => assert.equal(cache.cache.has(v), true));
+        assert.deepEqual(
+            cache.getEntries().map(el => el.key),
+            getReversedValues(values.slice(2))
+        );
     });
 
     it("should not evict recently used entry", () => {
@@ -36,8 +42,9 @@ describe("LRU tests", () => {
 
         cache.put(values[2], values[2]);
 
-        assert.equal(cache.cache.has(values[0]), true);
-        assert.equal(cache.cache.has(values[2]), true);
+        const entries = cache.getEntries();
+        assert.equal(entries.filter(el => el.key === values[0]).length, 1);
+        assert.equal(entries.filter(el => el.key === values[2]).length, 1);
     });
 
     it("should retrieve values given to the nodes", () => {
@@ -82,10 +89,7 @@ describe("LRU tests", () => {
         cache = new LRUCache(values.length);
         populateCache(cache, values);
 
-        const reversedValues = values
-            .join(" ")
-            .split(" ")
-            .reverse();
+        const reversedValues = getReversedValues(values);
 
         populateCache(cache, reversedValues);
 
