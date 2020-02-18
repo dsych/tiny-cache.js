@@ -1,4 +1,8 @@
 const LRUCache = require("../index").LRUCache;
 const runner = require("./TestSuite.test");
 
-runner("LRU tests", LRUCache);
+xdescribe("LRU tests", () => {
+    const values = [1, 2, 3, 4];
+
+    runner(values, LRUCache);
+});
