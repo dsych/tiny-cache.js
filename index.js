@@ -1,3 +1,4 @@
 const LRUCache = require("./src/LeastRecentUsed");
 const LFUCache = require("./src/LeastFreqUsed");
-module.exports = { LRUCache, LFUCache };
+const TimedCache = require("./src/TimedCache");
+module.exports = { LRUCache, LFUCache, TimedCache };

@@ -13,7 +13,7 @@ module.exports = class TimedCache {
             this.lifespan = 0;
         }
         this.cache = new Map();
-        this.interval = -1;
+        this.interval = null;
         // no reason to run eviction, if there will be no items
         if (this.lifespan > 0) {
             this.interval = setInterval(this.evict.bind(this), this.lifespan * 2);
@@ -36,7 +36,7 @@ module.exports = class TimedCache {
         let node = this.cache.get(key);
         if (!node) {
             const now = +new Date();
-            node = new Node(key, value, now);
+            node = new Node(key, value, now + this.lifespan);
         } else {
             node.value = value;
         }
@@ -70,7 +70,7 @@ module.exports = class TimedCache {
     }
 
     release() {
-        if (this.interval >= 0) {
+        if (this.interval) {
             clearInterval(this.interval);
         }
     }
