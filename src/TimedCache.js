@@ -45,7 +45,8 @@ module.exports = class TimedCache {
 
     get(key) {
         const node = this.cache.get(key);
-        if (!node) {
+        const now = +new Date();
+        if (!node || node.expires <= now) {
             return null;
         }
         return node.value;
