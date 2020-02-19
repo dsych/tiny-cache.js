@@ -89,21 +89,6 @@ module.exports = (values, Cache) => {
         assert.equal(entries.filter(el => el.key === values[2]).length, 1);
     });
 
-    it("should prioritize nodes correctly based on update", () => {
-        cache = new Cache(values.length);
-        populateCache(cache, values);
-
-        const reversedValues = getReversedValues(values);
-
-        populateCache(cache, reversedValues);
-
-        const entries = cache.getEntries();
-        assert.deepEqual(
-            entries.map(en => en.key),
-            values
-        );
-    });
-
     it("should not store any values for 0 max size", () => {
         cache = new Cache(0);
 
