@@ -1,7 +1,10 @@
 {
-    "name": "cache",
+    "name": "tiny-cache",
     "version": "1.0.0",
     "description": "",
+    "repository": {
+        "url": "https://github.com/dsych/tiny-cache.js"
+    },
     "main": "index.js",
     "scripts": {
         "test": "mocha"
