@@ -1,4 +1,4 @@
-# TinyCache.js
+# TinyCache.js ![build-status](https://travis-ci.com/dsych/tiny-cache.js.svg?branch=master)
 
 This is a collection of different caching algorithms that could be used both in **browser** and on a **server**.
 
